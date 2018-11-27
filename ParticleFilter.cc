@@ -3,15 +3,9 @@
 #include <algorithm>
 
 // size is the number of particles in each dimension
-void ParticleFilter::init (int dim, vector<state_t> input_bound, int size) {
-  // Base init.
-  base_filter_init (dim, input_bound);
-  
-  n_particles = 1;
-  while (dim > 0) {
-    n_particles *= size;
-    dim--;
-  }
+void ParticleFilter::init (int n_part) {
+    
+  n_particles = n_part;
 
   // Init Particles.
   init_particles ();

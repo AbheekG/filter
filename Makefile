@@ -1,9 +1,10 @@
 CCFLAGS=-std=c++14
 CC=g++
 
-filter : filter.cc filter.hh motion_update.cc sensor_update.cc \
+filter : main.cc filter.cc filter.hh motion_update.cc sensor_update.cc io.cc\
 			ParticleFilter.cc ParticleFilter.hh
-	$(CC) $(CCFLAGS) -o filter filter.cc motion_update.cc sensor_update.cc ParticleFilter.cc
+	$(CC) $(CCFLAGS) -o filter main.cc filter.cc motion_update.cc sensor_update.cc io.cc\
+			ParticleFilter.cc
 
 .PHONY: clean
 

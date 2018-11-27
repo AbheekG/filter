@@ -12,7 +12,7 @@ class ParticleFilter : public Filter {
 	void init_particles ();
 
 public:
-	void init (int, vector<state_t>, int);
+	void init (int);
 	void process ();
 	state_t current_state ();
 };
