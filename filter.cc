@@ -15,7 +15,7 @@ vector<double> Filter::sensor_pdf;
 int Filter::n_dim;
 int Filter::total_size;
 vector<int> Filter::dim_size;
-vector<state_t> Filter::bounds;
+vector<state_t> Filter::dim_bounds;
 
 
 // Init.
@@ -35,6 +35,33 @@ void Filter::filter_destroy () {
 	io_destroy ();
 }
 
+void Filter::filter_print () {
+
+	cout << "Test path: " << test_path << endl;
+	cout << "# epochs: " << n_epoch << endl;
+	cout << "# dimensions: " << n_dim << endl;
+	cout << "# total size: " << total_size << endl;
+	
+	cout << "Dim sizes: ";
+	for (const auto &dim : dim_size) cout << dim << ", ";
+	
+	cout << "\nDim bounds. ";
+	cout << "\nLower:\t";
+	for (const auto &b : dim_bounds[LOWER]) cout << b << "\t";
+	cout << "\nUpper:\t";
+	for (const auto &b : dim_bounds[UPPER]) cout << b << "\t";
+
+	cout << "\nPoints in domain along dimensions.";
+	for (const auto &dp : domain_points) {
+		cout << endl;
+		for (const auto &p : dp) {
+			cout << p << "\t";
+		}
+	}
+
+	cout << endl;
+}
+
 // Iteration.
 void Filter::new_iteration () {
 	
@@ -45,35 +72,16 @@ void Filter::new_iteration () {
 	for (auto &u : motion_u) {
 		motion_fid >> u;
 	}
+
 	// Sensor
 	for (auto &p : sensor_pdf) {
 		sensor_fid >> p;
 	}
 }
 
-int Filter::n_iteration () {
-	return n_epoch;
-}
-
-int Filter::get_iteration () {
-	return epoch;
-}
-
-// Dimension and bounds.
-int Filter::get_dim () {
-	return n_dim;	
-}
-
-double Filter::get_bound (int lu, int dim) {
-	return bounds[lu][dim];
-}
-
 /*
 Clock related.
 */
-std::clock_t Filter::clock_time () {
-	return time_duration;
-}
 
 void Filter::clock_start () {
 	time_duration = 0;

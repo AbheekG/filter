@@ -22,11 +22,11 @@ void Filter::io_init () {
 		meta_fid >> dim;
 	}
 	
-	bounds.resize(2);
-	bounds[LOWER].resize(n_dim);
-	bounds[UPPER].resize(n_dim);
+	dim_bounds.resize(2);
+	dim_bounds[LOWER].resize(n_dim);
+	dim_bounds[UPPER].resize(n_dim);
 	for (int i = 0; i < n_dim; ++i) {
-		meta_fid >> bounds[LOWER][i] >> bounds[UPPER][i];
+		meta_fid >> dim_bounds[LOWER][i] >> dim_bounds[UPPER][i];
 	}
 
 	total_size = 1;
@@ -34,9 +34,10 @@ void Filter::io_init () {
 		total_size *= dim;
 	}
 	
-	domain_points.resize(total_size);
-	for (auto& point : domain_points) {
-		for (auto &pt : point) {
+	domain_points.resize(n_dim);
+	for (int i = 0; i < n_dim; ++i) {
+		domain_points[i].resize (dim_size[i]);
+		for (auto &pt : domain_points[i]) {
 			meta_fid >> pt;
 		}
 	}
@@ -57,4 +58,11 @@ void Filter::io_init () {
 void Filter::io_destroy () {
 	motion_fid.close ();
 	sensor_fid.close ();
+}
+
+void Filter::io_store_cdf (vector<double> &cdf) {
+	for (int i = 0; i < cdf.size(); i++) {
+		cdf_fid << cdf[i];
+		if (i < cdf.size() - 1) cdf_fid << " "; else cdf_fid << endl;
+	}
 }
