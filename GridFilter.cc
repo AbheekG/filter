@@ -4,12 +4,7 @@
 
 // size is the number of particles in each dimension
 void GridFilter::init (vector<int> _grid_size) {
-    
-  // CDF I/O
-  name = "grid_filter_cdf.csv";
-  string path = get_test_path() + name;
-  cdf_fid.open(path);
-
+  
   grid_size = _grid_size;
 
   grid_total_size = 1;
@@ -28,6 +23,13 @@ void GridFilter::init (vector<int> _grid_size) {
   grid_pdf.resize(grid_total_size);
   for (auto &gp : grid_pdf) gp = 1.0/grid_total_size;
 
+  cdf.resize(get_total_size());
+  // CDF I/O
+  name = "grid_filter_" + std::to_string(grid_total_size) + ".csv";
+  string path = get_test_path() + "cdf_" + name;
+  cdf_fid.open(path);
+  path = get_test_path() + "pdf_" + name;
+  pdf_fid.open(path);
 }
 
 void GridFilter::process () {
@@ -52,6 +54,9 @@ void GridFilter::process () {
   // Motion update SLOW
   vector<double> old_grid_pdf(grid_total_size, 0);
 
+  // TEMP
+  int out_of_range = 0;
+
   for (int i = 0; i < grid_total_size; ++i) {
     auto state = grid_index_to_state( grid_id_to_index (i) );
 
@@ -74,14 +79,19 @@ void GridFilter::process () {
 
     if (in_range) {
       old_grid_pdf[grid_index_to_id(grid_state_to_index(state))] = grid_pdf[i];
+    } else {
+      out_of_range++;
     }
   }
+
+  cout << "Out of range = " << out_of_range << endl;
 
   // Sensor update
   // Calculating weights
   for (int i = 0; i < grid_total_size; ++i) {
     grid_pdf[i] = old_grid_pdf[i] * sensor_update ( 
       grid_index_to_state (grid_id_to_index(i)) );
+    grid_pdf[i] += 1. / (grid_total_size * grid_total_size);
   }
 
   // Normalizing.
@@ -94,7 +104,6 @@ void GridFilter::process () {
 
 void GridFilter::store_cdf () {
 
-  static vector<double> cdf(get_total_size());
   std::fill(cdf.begin(), cdf.end(), 0);
 
   // Construct approximate pdf. here pdf is called cdf.
@@ -103,10 +112,12 @@ void GridFilter::store_cdf () {
       grid_id_to_index (i))))] += grid_pdf[i];
   }
 
+  io_store_pdf (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
 }
 
 void GridFilter::destroy () {
+  pdf_fid.close();
   cdf_fid.close();
 }

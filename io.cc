@@ -66,3 +66,10 @@ void Filter::io_store_cdf (vector<double> &cdf) {
 		if (i < cdf.size() - 1) cdf_fid << " "; else cdf_fid << endl;
 	}
 }
+
+void Filter::io_store_pdf (vector<double> &pdf) {
+	for (int i = 0; i < pdf.size(); i++) {
+		pdf_fid << pdf[i];
+		if (i < pdf.size() - 1) pdf_fid << " "; else pdf_fid << endl;
+	}
+}

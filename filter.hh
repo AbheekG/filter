@@ -66,10 +66,13 @@ protected:
 	// Sensor update. Returns PDF value for given state. Definitons in sensor_update.cc
 	double sensor_update (state_t);
 
-	// Storing CDF
+	// Storing PDF, CDF
 	std::ofstream cdf_fid;
+	std::ofstream pdf_fid;
+	vector<double> cdf;
 
 	void io_store_cdf (vector<double> &);
+	void io_store_pdf (vector<double> &);
 	void pdf_to_cdf (vector<double> &);
 
 	// Fast inline functions.
@@ -109,6 +112,7 @@ public:
 	inline static int get_size (int i_dim) {return dim_size[i_dim];}
 	inline static int get_total_size () {return total_size;}
 	inline static double get_bound (int lu, int dim) {return dim_bounds[lu][dim];}
+	inline vector<double>& get_cdf() {return cdf;}
 
 };
 

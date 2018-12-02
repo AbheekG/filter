@@ -4,11 +4,8 @@
 
 // size is the number of particles in each dimension
 void ParticleFilter::init (int n_part) {
-   
-  // CDF I/O
-  name = "particle_filter_cdf.csv";
-  string path = get_test_path() + name;
-  cdf_fid.open(path);
+  
+  cdf.resize(get_total_size());
 
   n_particles = n_part;
   particles.resize(n_particles);
@@ -18,6 +15,13 @@ void ParticleFilter::init (int n_part) {
 
   // Init Particles.
   init_particles ();
+
+   // CDF I/O
+  name = "particle_filter_" + std::to_string (n_part) + ".csv";
+  string path = get_test_path() + "cdf_" + name;
+  cdf_fid.open(path);
+  path = get_test_path() + "pdf_" + name;
+  pdf_fid.open(path);
 }
 
 void ParticleFilter::init_particles () {
@@ -32,12 +36,15 @@ void ParticleFilter::init_particles () {
 void ParticleFilter::process () {
   clock_start ();
 
+  static std::normal_distribution<double> norm_d(0, 1./10);
   vector<double> weights(n_particles, 0);
   vector<state_t> old_particles(n_particles);
 
+  // NEW. Perturbation.
   // Motion update
   for (int i = 0; i < n_particles; ++i) {
     old_particles[i] = motion_update (particles[i]);
+    for (auto &op : old_particles[i]) op *= 1 + norm_d(generator);
   }
 
   // Sensor update
@@ -51,9 +58,9 @@ void ParticleFilter::process () {
   }
 
   // Resampling.
-  std::uniform_real_distribution<double> distribution(0, weights[n_particles-1]);
+  std::uniform_real_distribution<double> unif_d(0, weights[n_particles-1]);
   for (int i = 1; i < n_particles; ++i) {
-    double rand = distribution(generator);
+    double rand = unif_d(generator);
     int j = std::lower_bound (weights.begin(), weights.end(), rand) - weights.begin();
     particles[i] = old_particles[j];
   }
@@ -63,7 +70,6 @@ void ParticleFilter::process () {
 
 void ParticleFilter::store_cdf () {
   
-  static vector<double> cdf(get_total_size());
   std::fill(cdf.begin(), cdf.end(), 0);
 
   // Construct approximate pdf. here pdf is called cdf.
@@ -71,10 +77,12 @@ void ParticleFilter::store_cdf () {
     cdf[index_to_id(state_to_index (p))] += 1.0/n_particles;
   }
 
+  io_store_pdf (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
 }
 
 void ParticleFilter::destroy () {
+  pdf_fid.close();
   cdf_fid.close();
 }
