@@ -16,7 +16,7 @@ int Filter::n_dim;
 int Filter::total_size;
 vector<int> Filter::dim_size;
 vector<state_t> Filter::dim_bounds;
-
+state_t Filter::dim_density;
 
 // Init.
 void Filter::filter_init  (string _test_path = "data/test1/") {

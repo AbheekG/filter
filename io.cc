@@ -29,6 +29,11 @@ void Filter::io_init () {
 		meta_fid >> dim_bounds[LOWER][i] >> dim_bounds[UPPER][i];
 	}
 
+	dim_density.resize(n_dim);
+	for (int i = 0; i < n_dim; ++i) {
+		dim_density[i] = dim_size[i] / (dim_bounds[UPPER][i] - dim_bounds[LOWER][i]);
+	}
+
 	total_size = 1;
 	for (auto dim : dim_size) {
 		total_size *= dim;

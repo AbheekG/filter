@@ -3,9 +3,12 @@
 #include <algorithm>
 
 // size is the number of particles in each dimension
-void GridFilter::init (vector<int> _grid_size) {
-  
-  grid_size = _grid_size;
+void GridFilter::init (int grid_approx) {
+
+  grid_size.resize(get_dim());
+  for (int i = 0; i < get_dim(); ++i) {
+    grid_size[i] = (get_size(i)-1)/grid_approx + 1;
+  }  
 
   grid_total_size = 1;
   for (auto gs : grid_size) grid_total_size *= gs;
@@ -25,10 +28,10 @@ void GridFilter::init (vector<int> _grid_size) {
 
   cdf.resize(get_total_size());
   // CDF I/O
-  name = "grid_filter_" + std::to_string(grid_total_size) + ".csv";
-  string path = get_test_path() + "cdf_" + name;
+  name = "grid-filter-" + std::to_string(grid_approx) + ".csv";
+  string path = get_test_path() + "cdf-" + name;
   cdf_fid.open(path);
-  path = get_test_path() + "pdf_" + name;
+  path = get_test_path() + "pdf-" + name;
   pdf_fid.open(path);
 }
 
@@ -91,7 +94,7 @@ void GridFilter::process () {
   for (int i = 0; i < grid_total_size; ++i) {
     grid_pdf[i] = old_grid_pdf[i] * sensor_update ( 
       grid_index_to_state (grid_id_to_index(i)) );
-    grid_pdf[i] += 1. / (grid_total_size * grid_total_size);
+    // grid_pdf[i] += 1. / (grid_total_size * grid_total_size);
   }
 
   // Normalizing.
@@ -99,7 +102,7 @@ void GridFilter::process () {
   for (const auto &gp : grid_pdf) sum += gp;
   for (auto &gp : grid_pdf) gp /= sum;
 
-  clock_stop ();  
+  clock_stop ();
 }
 
 void GridFilter::store_cdf () {

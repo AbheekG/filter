@@ -4,8 +4,6 @@
 
 // size is the number of particles in each dimension
 void ParticleFilter::init (int n_part) {
-  
-  cdf.resize(get_total_size());
 
   n_particles = n_part;
   particles.resize(n_particles);
@@ -16,11 +14,12 @@ void ParticleFilter::init (int n_part) {
   // Init Particles.
   init_particles ();
 
+  cdf.resize(get_total_size());
    // CDF I/O
-  name = "particle_filter_" + std::to_string (n_part) + ".csv";
-  string path = get_test_path() + "cdf_" + name;
+  name = "particle-filter-" + std::to_string (n_part) + ".csv";
+  string path = get_test_path() + "cdf-" + name;
   cdf_fid.open(path);
-  path = get_test_path() + "pdf_" + name;
+  path = get_test_path() + "pdf-" + name;
   pdf_fid.open(path);
 }
 

@@ -28,7 +28,7 @@ class GridFilter : public Filter {
 	}
 
 public:
-	void init (vector<int>);
+	void init (int);
 	void process ();
 	state_t current_state ();
 	// Processes and stores the CDF.

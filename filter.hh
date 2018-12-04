@@ -44,6 +44,7 @@ private:
 	static int total_size;
 	static vector<int> dim_size;
 	static vector<state_t> dim_bounds; // 0 : lower bound. 1 : upper bound.
+	static state_t dim_density;	// Number of points per unit.
 	// Points in state space where we have the PDF value.
 	static vector<vector<double> > domain_points;
 
@@ -112,6 +113,7 @@ public:
 	inline static int get_size (int i_dim) {return dim_size[i_dim];}
 	inline static int get_total_size () {return total_size;}
 	inline static double get_bound (int lu, int dim) {return dim_bounds[lu][dim];}
+	inline static double get_density (int i_dim) {return dim_density[i_dim];}
 	inline vector<double>& get_cdf() {return cdf;}
 
 };
