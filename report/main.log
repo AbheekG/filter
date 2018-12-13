@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  12 DEC 2018 23:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  13 DEC 2018 06:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/home/prateeti/Dropbox/sem1/CS393R/report/main.tex
-(/home/prateeti/Dropbox/sem1/CS393R/report/main.tex
+**/home/prateeti/Dropbox/sem1/CS393R/project/report/main.tex
+(/home/prateeti/Dropbox/sem1/CS393R/project/report/main.tex
 LaTeX2e <2017-04-15>
 Babel <3.18> and hyphenation patterns for 84 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -218,10 +218,7 @@ Underfull \hbox (badness 5331) in paragraph at lines 2--3
 \OT1/ptm/m/n/10 For lin-ear sys-tems with white noise, Kalman fil-ter
  []
 
-
-Underfull \vbox (badness 1142) has occurred while \output is active []
-
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 
@@ -239,23 +236,40 @@ File: dgrid.png Graphic file (type png)
 <use dgrid.png>
 Package pdftex.def Info: dgrid.png  used on input line 28.
 (pdftex.def)             Requested size: 239.39438pt x 239.9042pt.
-) (./eval.tex)
-[3 <./grid.png> <./dgrid.png>]
+)
+(./eval.tex
+<test1_03.png, id=23, 578.16pt x 433.62pt>
+File: test1_03.png Graphic file (type png)
+<use test1_03.png>
+Package pdftex.def Info: test1_03.png  used on input line 75.
+(pdftex.def)             Requested size: 239.39438pt x 179.54533pt.
+<test1_06.png, id=24, 578.16pt x 433.62pt>
+File: test1_06.png Graphic file (type png)
+<use test1_06.png>
+Package pdftex.def Info: test1_06.png  used on input line 80.
+(pdftex.def)             Requested size: 239.39438pt x 179.54533pt.
+<test1_10.png, id=25, 578.16pt x 433.62pt>
+File: test1_10.png Graphic file (type png)
+<use test1_10.png>
+Package pdftex.def Info: test1_10.png  used on input line 85.
+(pdftex.def)             Requested size: 239.39438pt x 179.54533pt.
+ [3 <./grid.png> <./dgrid.png>] [4 <./test1_03.png> <./test1_06.png> <./test1_1
+0.png>])
 Underfull \hbox (badness 1009) in paragraph at lines 54--55
 \OT1/ptm/m/n/10 works are used and the neu-ral net-works have given
  []
 
-(./main.bbl [4]) [5
+(./main.bbl [5]) [6
 
 ] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 2271 strings out of 492982
- 32345 string characters out of 6134895
- 108772 words of memory out of 5000000
- 5783 multiletter control sequences out of 15000+600000
+ 2286 strings out of 492982
+ 32606 string characters out of 6134895
+ 116772 words of memory out of 5000000
+ 5795 multiletter control sequences out of 15000+600000
  18342 words of font info for 37 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,10n,25p,1012b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,10n,25p,1020b,246s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texli
@@ -267,10 +281,10 @@ ic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (5 pages, 133477 bytes).
+Output written on main.pdf (6 pages, 191955 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
- 47 compressed objects within 1 object stream
+ 76 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

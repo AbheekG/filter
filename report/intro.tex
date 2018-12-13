@@ -15,17 +15,17 @@ Uncertainty is ubiquitous in robotics, which has made probabilistic algorithms a
 
 In the above algorithm, the time is discrete and denoted by $t$. $x_t$ is the random variable representing the state at time $t$. Similarly, $u_t$ is the motion measurement and $z_t$ is the sensor measurement at time $t$. $bel(x_t)$ denotes the belief distribution. The motion\_update updates the belief using the previous belief and current action measurement, and the sensor\_update, similarly, updates the belief using current sensor measurement.
 
-To practically implement a fast and resonably accurate Bayesian filtering algorithm we need to decide upon these three main points:
+To practically implement a fast and reasonably accurate Bayesian filtering algorithm we need to decide upon these three main points:
 \begin{enumerate}
 \item Efficiently store/approximate the belief distribution $bel(x_t)$. The belief is essentially a probability distribution function. Some of the common methods used for function approximation are:
 \begin{itemize}
-	\item Storing the value of the function at a finite number of points in the domain.
-	\item Using a finite degree polynomial that fits the function with least squared error.
-	\item Recently very popular and successful in several other areas, using a deep neural network.
-	\item As the belief is a PDF with its special properties, it is non-negative and sums (integrates) up to $1$, we can store it using fixed number of samples from the distribution.
+    \item Storing the value of the function at a finite number of points in the domain.
+    \item Using a finite degree polynomial that fits the function with a least squared error.
+    \item Recently very popular and successful in several other areas, using a deep neural network.
+    \item As the belief is a PDF with its special properties, it is non-negative and sums (integrates) up to $1$, we can store it using a fixed number of samples from the distribution.
 \end{itemize}
-\item Efficiently do the motion update. If the motion measurement has, or can be easily transformed into one that has, the same dimension as the state, and each dimension of the motion measurement has one-to-one correspondence to that of the current state, then usually the update in the belief looks similar to translation of the function.
-\item Efficiently do the sensor update. This mainly involves finding the product of two PDFs.
+\item Efficiently does the motion update. If the motion measurement has, or can be easily transformed into one that has, the same dimension as the state, and each dimension of the motion measurement has a one-to-one correspondence to that of the current state, then usually the update in the belief looks similar to the translation of the function.
+\item Efficiently does the sensor update. This mainly involves finding the product of two PDFs.
 \end{enumerate}
 
 The ideas mentioned in the (1) above motivate the techniques we study. But, as we will see later, (2) and (3) will have a significant impact on the performance of the algorithms.
