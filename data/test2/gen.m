@@ -14,7 +14,7 @@ function gen
 	fprintf (meta_fid, "%d\n", n_dim);
 	
 	% size of each dimension
-	dim_size = [10000];
+	dim_size = [1000];
 	for i = 1:n_dim
 		fprintf (meta_fid, "%d", dim_size(i)+1);
 		if i < n_dim
@@ -54,15 +54,15 @@ function gen
 	% Parameters specific to this test
 	Motion = [
 	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
+	0.5;
+	0.5;
+	0.5;
+	-0.5;
+	-0.5;
+	1;
+	0.5;
+	1;
+	1;
 	];
 
 	% Generating data

@@ -10,11 +10,11 @@ function gen
 	fprintf (meta_fid, "%d\n", n_epoch);
 	
 	% n_dim
-	n_dim = 1;
+	n_dim = 2;
 	fprintf (meta_fid, "%d\n", n_dim);
 	
 	% size of each dimension
-	dim_size = [10000];
+	dim_size = [100, 100];
 	for i = 1:n_dim
 		fprintf (meta_fid, "%d", dim_size(i)+1);
 		if i < n_dim
@@ -25,18 +25,19 @@ function gen
 	end
 
 	% lower and upper bound of each dimension
-	lower_bound = [-5];
-	upper_bound = [5];
+	lower_bound = [0, 0];
+	upper_bound = [100, 100];
 	for i = 1:n_dim
 		fprintf (meta_fid, "%e %e\n", lower_bound(i), upper_bound(i));
 	end
 
+	XX = {};
 	% Data along each dimension. Redundancy, size and bounds sufficient!
 	for i = 1:n_dim
-		X = lower_bound(i) : (upper_bound(i)-lower_bound(i))/dim_size(i) : upper_bound(i);
-		for j = 1:length(X)
-			fprintf (meta_fid, "%e", X(j));
-			if j < length(X)
+		XX{i} = lower_bound(i) : (upper_bound(i)-lower_bound(i))/dim_size(i) : upper_bound(i);
+		for j = 1:length(XX{i})
+			fprintf (meta_fid, "%e", XX{i}(j));
+			if j < length(XX{i})
 				fprintf (meta_fid, " ");
 			else
 				fprintf (meta_fid, "\n");
@@ -53,16 +54,29 @@ function gen
 
 	% Parameters specific to this test
 	Motion = [
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
-	0;
+	2, 0;
+	5, 0;
+	2, 5;
+	0, 5;
+	-5, 1;
+	0, 1;
+	2, 1;
+	-1, -1;
+	-5, 2;
+	0, 2;
+	];
+
+	Motion = [
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
+	0, 0;
 	];
 
 	% Generating data
@@ -98,33 +112,40 @@ function gen
 	0.0, 1.0, 0.0;
 	];
 
-	% Generating data
-	motion_ = 0;
+	% Generating data (2D)
+	motion_ = [0,0];
 	for i = 1:n_epoch
-		motion_ = motion_ + Motion(i);
+		motion_ = motion_ + Motion(i,:);
 		coeff = 0;
 
-		Y = X;
-		for j = 1:length(X)
-			Y(j) = func(X(j), Param(i,1), Param(i,2), Param(i,3), motion_);
-			coeff = coeff + Y(j);
-		end
-
-		% TODO. only for 1 dim.
-		coeff = (upper_bound(1)-lower_bound(1)) * coeff;
-		coeff = dim_size(1) / coeff;
-
-		for j = 1:length(Y)
-			Y(j) = Y(j) * coeff;
-			fprintf (sensor_fid, "%e", Y(j));
-			if j < length(X)
-				fprintf (sensor_fid, " ");
-			else
-				fprintf (sensor_fid, "\n");
+		% TODO. only 2 dim
+		YY = zeros(length(XX{1}), length(XX{2}));
+		for j1 = 1:length(XX{1})
+			for j2 = 1:length(XX{2})
+				YY(j1,j2) = func([XX{1}(j1), XX{2}(j2)], ...
+					Param(i,1), Param(i,2), Param(i,3), motion_);
+				coeff = coeff + YY(j1,j2);
 			end
 		end
 
-		figure; plot (X, Y);
+		for j = 1:n_dim
+			coeff = (upper_bound(j)-lower_bound(j)) * coeff;
+			coeff = coeff / dim_size(j);
+		end
+
+		for j1 = 1:length(XX{1})
+			for j2 = 1:length(XX{2})
+				YY(j1,j2) = YY(j1,j2) / coeff;
+				fprintf (sensor_fid, "%e", YY(j1,j2));
+				if ( (j1 < length(XX{1})) || (j2 < length(XX{2})) )
+					fprintf (sensor_fid, " ");
+				else
+					fprintf (sensor_fid, "\n");
+				end
+			end
+		end
+
+		figure; surf (XX{1}, XX{2}, YY);
 	end
 
 	fclose (sensor_fid);
@@ -134,8 +155,9 @@ function gen
 
 end
 
-function [y] = func(x, a, b, c, motion_)
-	y = a*normpdf (x - motion_, -3, 1) + ...
-		b*normpdf (x - motion_, -1, 1) + ...
-		c*normpdf (x - motion_, 3, 1);
+function [y] = func(X, a, b, c, M)
+	X = X - M;
+	y = a * normpdf (X(1), 40, 2) * normpdf (X(2), 80, 5) + ...
+		b * normpdf (X(1), 30, 5) * normpdf (X(2), 30, 5) + ...
+		c * normpdf (X(1), 70, 10) * normpdf (X(2), 20, 1) ;
 end
