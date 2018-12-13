@@ -1,2 +1,2 @@
-Comparing Nouvel Filtering Techniques
+Comparing Filtering Techniques for Localization
 ======================
