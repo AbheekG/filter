@@ -1,0 +1,115 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Bobrowski \bgroup et al\mbox.\egroup
+  }{2008}]{neuspike1}
+Bobrowski, O.; Meir, R.; Shoham, S.; and Eldar, Y.
+\newblock 2008.
+\newblock A neural network implementing optimal state estimation based on
+  dynamic spike train decoding.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  145--152.
+
+\bibitem[\protect\citeauthoryear{Bucy}{1975}]{grid1}
+Bucy, R.~S.
+\newblock 1975.
+\newblock Nonlinear filtering.
+\newblock Technical report, University of Southern California, Los Angeles,
+  Dept. of Aerospace Engineering and Mathematics.
+
+\bibitem[\protect\citeauthoryear{Daum}{1994}]{anl3}
+Daum, F.~E.
+\newblock 1994.
+\newblock New exact nonlinear filters: Theory and applications.
+\newblock In {\em Signal and Data Processing of Small Targets 1994}, volume
+  2235,  636--650.
+\newblock International Society for Optics and Photonics.
+
+\bibitem[\protect\citeauthoryear{Haarnoja \bgroup et al\mbox.\egroup
+  }{2016}]{neu5}
+Haarnoja, T.; Ajay, A.; Levine, S.; and Abbeel, P.
+\newblock 2016.
+\newblock Backprop kf: Learning discriminative deterministic state estimators.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  4376--4384.
+
+\bibitem[\protect\citeauthoryear{Julier and Uhlmann}{1997}]{ukf1}
+Julier, S.~J., and Uhlmann, J.~K.
+\newblock 1997.
+\newblock New extension of the kalman filter to nonlinear systems.
+\newblock In {\em Signal processing, sensor fusion, and target recognition VI},
+  volume 3068,  182--194.
+\newblock International Society for Optics and Photonics.
+
+\bibitem[\protect\citeauthoryear{Julier, Uhlmann, and
+  Durrant-Whyte}{2000}]{ukf3}
+Julier, S.; Uhlmann, J.; and Durrant-Whyte, H.~F.
+\newblock 2000.
+\newblock A new method for the nonlinear transformation of means and
+  covariances in filters and estimators.
+\newblock {\em IEEE Transactions on automatic control} 45(3):477--482.
+
+\bibitem[\protect\citeauthoryear{Kalman}{1960}]{kalman}
+Kalman, R.~E.
+\newblock 1960.
+\newblock A new approach to linear filtering and prediction problems.
+\newblock {\em Transactions of the ASME--Journal of Basic Engineering}
+  82(Series D):35--45.
+
+\bibitem[\protect\citeauthoryear{Kanekar and Feliachi}{1990}]{neu4}
+Kanekar, A.~J., and Feliachi, A.
+\newblock 1990.
+\newblock State estimation using artificial neural networks.
+\newblock In {\em System Theory, 1990., Twenty-Second Southeastern Symposium
+  on},  552--556.
+\newblock IEEE.
+
+\bibitem[\protect\citeauthoryear{Kotecha and Djuric}{2003}]{gpf}
+Kotecha, J.~H., and Djuric, P.~M.
+\newblock 2003.
+\newblock Gaussian sum particle filtering.
+\newblock {\em IEEE Transactions on signal processing} 51(10):2602--2612.
+
+\bibitem[\protect\citeauthoryear{Kushner}{1967}]{anl2}
+Kushner, H.
+\newblock 1967.
+\newblock Approximations to optimal nonlinear filters.
+\newblock {\em IEEE Transactions on Automatic Control} 12(5):546--556.
+
+\bibitem[\protect\citeauthoryear{Sorenson and Stubbeud}{1968}]{anl1}
+Sorenson, H.~W., and Stubbeud, A.~R.
+\newblock 1968.
+\newblock Non-linear filtering by approximation of the a posteriori density.
+\newblock {\em International Journal of Control} 8(1):33--51.
+
+\bibitem[\protect\citeauthoryear{Talebi \bgroup et al\mbox.\egroup
+  }{2010}]{neu2}
+Talebi, H.~A.; Abdollahi, F.; Patel, R.~V.; and Khorasani, K.
+\newblock 2010.
+\newblock Neural network-based state estimation schemes.
+\newblock In {\em Neural Network-Based State Estimation of Nonlinear Systems}.
+  Springer.
+\newblock  15--35.
+
+\bibitem[\protect\citeauthoryear{Thrun, Burgard, and Fox}{2005}]{prob}
+Thrun, S.; Burgard, W.; and Fox, D.
+\newblock 2005.
+\newblock {\em Probabilistic robotics}.
+\newblock MIT press.
+
+\bibitem[\protect\citeauthoryear{Wan and Van Der~Merwe}{2000}]{ukf2}
+Wan, E.~A., and Van Der~Merwe, R.
+\newblock 2000.
+\newblock The unscented kalman filter for nonlinear estimation.
+\newblock In {\em Adaptive Systems for Signal Processing, Communications, and
+  Control Symposium 2000. AS-SPCC. The IEEE 2000},  153--158.
+\newblock Ieee.
+
+\bibitem[\protect\citeauthoryear{Yadaiah and Sowmya}{2006}]{neu1}
+Yadaiah, N., and Sowmya, G.
+\newblock 2006.
+\newblock Neural network based state estimation of dynamical systems.
+\newblock In {\em Neural Networks, 2006. IJCNN'06. International Joint
+  Conference on},  1042--1049.
+\newblock IEEE.
+
+\end{thebibliography}

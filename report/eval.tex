@@ -1,0 +1,48 @@
+\section{Results}
+We evaluated the algorithms on several tests (included with the code, in $data$ folder). Some of the generated tests were simpler, other more complex. We well present data for two of them. We also ported the fixed grid filter and dynamic grid filter algorithms on Nao robot and did the practical demonstration.
+
+In the first test, we have only one dimension. Initially, there are three states around which the robot can be. With time the robot's confidence increases for one location. All the techniques have around $100$ parameters. (Except polynomial filter which has implementation upto only degree $2$, so $3$ parameters only.)
+\begin{itemize}
+	\item Particle filter (PF): $100$ particles.
+	\item Fixed grid filter (FGF): $100$ grid points.
+	\item Dynamic grid filter (DGF): $50$ to $100$ grid points. (dynamic.)
+	\item Neural network (NN): Two layers of size $10$. $10*10=100$. (approx.)
+\end{itemize}
+
+\begin{table}
+\caption{Error in mean of estimated state.}	
+\begin{center}
+\begin{tabular}{ | c || c | c | c | c | c | }
+Step & PF & FGF & DGF & PolyF & NN \\
+1 & 0.5007 & 0.0010 & 0.1915 & 0.0224 & 0.0259 \\  
+2 & 0.6320 & 0.0015 & 0.4271 & 0.2390 & 0.2663 \\  
+3 & 0.3487 & 0.0018 & 0.7181 & 0.3715 & 0.4382 \\  
+4 & 0.1031 & 0.0020 & 1.0043 & 0.5999 & 0.4570 \\  
+5 & 0.3854 & 0.0021 & 1.2934 & 0.5197 & 0.2080 \\  
+6 & 0.4882 & 0.0022 & 1.4082 & 0.0116 & 0.0971 \\  
+7 & 0.4264 & 0.0023 & 1.3687 & 0.8871 & 1.0026 \\  
+8 & 0.1852 & 0.0023 & 1.2192 & 1.8244 & 1.5367 \\  
+9 & 0.0173 & 0.0023 & 1.0895 & 2.7725 & 2.1200 \\  
+10 & 0.2027 & 0.0023 & 0.9733 & 3.5915 & 2.3507 
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{L2-error in computed CDF.}	
+\begin{center}
+\begin{tabular}{ | c || c | c | c | c | c | }
+Step & PF & FGF & DGF & PolyF & NN \\
+1 & 5.5895 & 0.3385 & 5.6089 & 4.7394 & 5.5770 \\  
+2 & 3.1485 & 0.3799 & 4.7029 & 7.9123 & 8.0532 \\  
+3 & 5.1527 & 0.4117 & 5.0591 & 8.9555 & 8.0353 \\  
+4 & 4.5226 & 0.4256 & 5.4113 & 9.6027 & 7.7276 \\  
+5 & 9.2158 & 0.4360 & 6.1948 & 10.0842 & 8.2515 \\  
+6 & 7.7962 & 0.4820 & 5.6106 & 13.5393 & 9.0468 \\  
+7 & 7.1645 & 0.5667 & 4.6130 & 18.8865 & 14.8883 \\  
+8 & 7.4783 & 0.6547 & 4.0991 & 21.6299 & 12.3882 \\  
+9 & 5.9185 & 0.7172 & 3.4860 & 22.7425 & 12.8611 \\  
+10 & 5.7165 & 0.7603 & 3.0654 & 22.6650 & 10.1677 
+\end{tabular}
+\end{center}
+\end{table}

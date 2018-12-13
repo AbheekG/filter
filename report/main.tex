@@ -1,0 +1,67 @@
+\def\year{2019}\relax
+%File: formatting-instruction.tex
+\documentclass[letterpaper]{article} %DO NOT CHANGE THIS
+\usepackage{aaai19}  %Required
+\usepackage{times}  %Required
+\usepackage{helvet}  %Required
+\usepackage{courier}  %Required
+\usepackage{url}  %Required
+\usepackage{graphicx}  %Required
+\frenchspacing  %Required
+\setlength{\pdfpagewidth}{8.5in}  %Required
+\setlength{\pdfpageheight}{11in}  %Required
+
+\nocopyright
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+
+
+%PDF Info Is Required:
+  \pdfinfo{
+/Title (Comparing Some Bayesian Filtering Techniques)
+/Author (Abheek Ghosh)}
+\setcounter{secnumdepth}{0}  
+ \begin{document}
+% The file aaai.sty is the style file for AAAI Press 
+% proceedings, working notes, and technical reports.
+%
+\title{Comparing Some Bayesian Filtering Techniques}
+\author{Abheek Ghosh\\
+Department of Computer Science \\
+The University of Texas at Austin \\
+2317 Speedway, Stop D9500 \\
+Austin, TX 78712 \\
+}
+\maketitle
+\begin{abstract}
+We investigate and compare Bayesian filtering algorithms, methods like particle filter. The filtering algorithms we implement are: fixed size grid (histogram) filter, tree based dynamic grid (histogram) filter, particle filter, filter based on a polynomial of fixed degree, and a filter based on feed-forward deep neural networks. We develop a modular testing and simulation framework where these techniques and possibly other filtering techniques can be compared. Assuming that the estimation of a very very fine grid filter is the best that can be generated using the past history of samples, we compare the algorithms on the basis of: the error in the estimated mean state of the system, and the $L_2$-error in the cumulative distribution function of the estimated belief.
+
+We observe that for the localization of Nao robot, particle filter works better than other techniques given same computation resources. We anticipate that this is due to combination of factors: the high error in the vision samples, simple belief distribution, non-requirement of high accuracy in state estimation. When we need very high accuracy and deterministic behavior, techniques like dynamic grid filter and neural network perform better.
+\end{abstract}
+
+\noindent
+
+\input{intro.tex}
+\input{related.tex}
+\input{algos.tex}
+\input{eval.tex}
+
+\section{Conclusion}
+In this project, we used some standard filtering techniques, like the grid filter (fixed and dynamic) and the particle filter, and some slightly unconventional ones, like the polynomial filter and the neural network. We made the algorithms work on both simulation and Nao, albeit they didn't perform very well. The algorithms were far more complex to implement than particle filter, but performed worse than particle filter. Some possible reasons that the algorithms didn't work well:
+\begin{itemize}
+	\item The sub-algorithms used for incorporating sensor and motion updates as part of the individual filtering algorithms may not be the best way to do it. For example, in the dynamic grid filtering algorithm, for sensor update of each grid block we have to reach the full depth of the tree multiple times. For some motion updates, the entire tree has to be reconstructed.
+	\item The implementation of the algorithms is not efficient.
+	\item In areas where the polynomial methods and neural networks are used and the neural networks have given tremendous results, the estimated function doesn't vary over time. The NNs have to learn a complex fixed function using a lot of samples. In our case, the belief distribution varies over time. In some experiments, we found that once the neural network is already trained it gets stuck there and cannot approximate an entirely new function.
+	\item The belief distributions are not very complex, atleast for the examples we constructed and for Nao's localization.
+	\item The error in sensor and motion measurements is very high. The high accuracy provided by deep NNs becomes irrelevant here.
+\end{itemize}
+
+\section{Acknowledgements}
+We thank Prof. Peter Stone and TA Josiah Hannah for their guidance, regular valuable comments, and providing us with the Nao robot and appropriate development environment.
+
+
+\bibliographystyle{aaai}
+
+\bibliography{references}
+
+\end{document}
