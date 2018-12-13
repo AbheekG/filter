@@ -19,7 +19,7 @@ void DynamicGridFilter::init (double _thr_l, double _thr_h) {
 
   cdf.resize(get_total_size());
   // CDF I/O
-  name = "dynamic-grid-" + std::to_string(thr_l) + "-" + std::to_string(thr_h) + ".csv";
+  name = "dynamic-grid-" + std::to_string(thr_h) + ".csv";
   string path = get_test_path() + "cdf-" + name;
   cdf_fid.open(path);
   path = get_test_path() + "pdf-" + name;
@@ -42,10 +42,10 @@ void DynamicGridFilter::process () {
   // NOTE normalizing before restructure to make
   // sure that probabilities 1.
   double sum = get_total_weight (root);
-  cout << "Sum before normalize = " << sum << endl;
+  // cout << "Sum before normalize = " << sum << endl;
   normalize (root, sum);
-  sum = get_total_weight (root);
-  cout << "Sum after normalize = " << sum << endl;
+  // sum = get_total_weight (root);
+  // cout << "Sum after normalize = " << sum << endl;
 
   restructure_node (root);
 
@@ -54,8 +54,8 @@ void DynamicGridFilter::process () {
   clock_stop ();
 
   // TEMP.Just printing.
-  sum = get_total_weight (root);
-  cout << "Sum after restructure = " << sum << endl;
+  // sum = get_total_weight (root);
+  // cout << "Sum after restructure = " << sum << endl;
 }
 
 
@@ -250,8 +250,10 @@ void DynamicGridFilter::store_cdf () {
   double sum = 0;
 
   io_store_pdf (cdf);
+  compute_mean_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
+  io_store_error (cdf);
 }
 
 void DynamicGridFilter::store_cdf_helper (const node* x) {

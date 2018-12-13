@@ -77,8 +77,10 @@ void ParticleFilter::store_cdf () {
   }
 
   io_store_pdf (cdf);
+  compute_mean_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
+  io_store_error (cdf);
 }
 
 void ParticleFilter::destroy () {

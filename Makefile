@@ -1,4 +1,4 @@
-CCFLAGS=-std=c++14 -O2 -I/home/prateeti/Dropbox/sem1/CS393R/project
+CCFLAGS=-std=c++14 -O0 -I$(CURDIR)
 CC=g++
 headers = $(wildcard *.hh)
 codes = $(wildcard *.cc)

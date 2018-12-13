@@ -1,6 +1,7 @@
 /*
 This file contains code for the sensor update.
 And some basic functions for array access.
+And some other functions.
 */
 
 #include "filter.hh"
@@ -46,6 +47,20 @@ void Filter::pdf_to_cdf (vector<double> &cdf) {
 					temp = cdf[index_to_id(index)];
 				}
 			}
+		}
+	}
+}
+
+void Filter::compute_mean_state (const vector<double> &pdf) {
+
+	double wt = 0;
+	state_t state(n_dim, 0);
+	mean_state.resize(n_dim, 0);
+
+	for (int i = 0; i < pdf.size(); ++i) {
+		state = index_to_state( id_to_index (i) );
+		for (int j = 0; j < n_dim; ++j) {
+			mean_state[j] += pdf[i] * state[j];
 		}
 	}
 }

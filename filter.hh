@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
+#include <algorithm>
 
 using std::string;
 using std::vector;
@@ -30,6 +32,8 @@ private:
 	static std::ifstream meta_fid;
 	static std::ifstream motion_fid;
 	static std::ifstream sensor_fid;
+	static std::ofstream state_error_fid;
+	static std::ofstream cdf_error_fid;
 	static void io_init ();
 	static void io_destroy ();
 
@@ -47,6 +51,10 @@ private:
 	static state_t dim_density;	// Number of points per unit.
 	// Points in state space where we have the PDF value.
 	static vector<vector<double> > domain_points;
+
+	// Error related
+	static state_t* base_mean_state;
+	static vector<double>* base_cdf;
 
 	// Clock related.
 	clock_t time, time_duration;
@@ -71,10 +79,13 @@ protected:
 	std::ofstream cdf_fid;
 	std::ofstream pdf_fid;
 	vector<double> cdf;
+	state_t mean_state;
 
 	void io_store_cdf (vector<double> &);
 	void io_store_pdf (vector<double> &);
 	void pdf_to_cdf (vector<double> &);
+  	void compute_mean_state (const vector<double> &);
+  	void io_store_error (const vector<double> &);
 
 	// Fast inline functions.
 	inline static int index_to_id (const vector<int> &index) {
@@ -98,6 +109,7 @@ public:
 	static void filter_init (string);
 	static void filter_destroy ();
 	static void filter_print ();
+	void make_base ();
 
 	// Updates sensor data for new iteration.
 	static void new_iteration ();

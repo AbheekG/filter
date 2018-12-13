@@ -87,7 +87,7 @@ void GridFilter::process () {
     }
   }
 
-  cout << "Out of range = " << out_of_range << endl;
+  // cout << "Out of range = " << out_of_range << endl;
 
   // Sensor update
   // Calculating weights
@@ -116,8 +116,10 @@ void GridFilter::store_cdf () {
   }
 
   io_store_pdf (cdf);
+  compute_mean_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
+  io_store_error (cdf);
 }
 
 void GridFilter::destroy () {

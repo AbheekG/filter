@@ -41,7 +41,7 @@ void NeuralNetwork::init ( int _nn_iter, int _nn_samples,
   opt.m_lrate = l_rate;
 
   // Loss print function.
-  net.set_callback(callback);
+  // net.set_callback(callback);
 
   // Initialize parameters with N(0, 0.01^2) using random seed 123
   net.init(0, 0.01, 123);
@@ -77,55 +77,55 @@ void NeuralNetwork::process () {
   train_x.resize(get_dim()+1, nn_samples);
   train_y.resize(1, nn_samples);
 
-  for (int i = 0; i < nn_samples; ++i) {
-    state_t state = index_to_state(id_to_index(i));
-    train_x(0,i) = 1;
-    for (int j = 0; j < get_dim(); j++) {
-      train_x(j+1,i) = state[j] - motion_offset[j];
-    }
+  // for (int i = 0; i < nn_samples; ++i) {
+  //   state_t state = index_to_state(id_to_index(i));
+  //   train_x(0,i) = 1;
+  //   for (int j = 0; j < get_dim(); j++) {
+  //     train_x(j+1,i) = state[j] - motion_offset[j];
+  //   }
 
-    train_y(0,i) = sensor_update (state);
-  }
-
-  // for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-  // 	int rand;
-
-  // 	// Purely random // TODO NOTE.  only using this
-  // 	if (i_sample < int(2*nn_samples)) {
-  // 		rand = unif_i(generator);
-  // 	}
-  // 	// Using previous CDF
-  // 	else {
-  // 		rand = std::lower_bound(cdf.begin(), cdf.end(),
-  // 			unif_d(generator)) - cdf.begin();
-  // 		if (rand < 0 || rand >= get_total_size()) {
-  // 			cout << "Problematic random number!!! " << rand << "\n";
-  // 			rand = unif_i(generator);
-  // 		}
-  // 	}
-
-  // 	state_t state = index_to_state(id_to_index(rand));
-  // 	for (int i = 0; i < get_dim(); ++i) {
-  // 		train_x(i+1,i_sample) = state[i] - motion_offset[i];
-  // 	}
-
-  // 	train_y(0,i_sample) = sensor_update (state);
+  //   train_y(0,i) = sensor_update (state);
   // }
 
-  if (first_training) {
-  	first_training = false;
-  } else {
-  	Matrix pred = net.predict(train_x);
-  	for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-  	  train_y(0,i_sample) *= pred(0,i_sample);
+  for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
+  	int rand;
+
+  	// Purely random // TODO NOTE.  only using this
+  	if (i_sample < int(0*nn_samples)) {
+  		rand = unif_i(generator);
   	}
+  	// Using previous CDF
+  	else {
+  		rand = std::lower_bound(cdf.begin(), cdf.end(),
+  			unif_d(generator)) - cdf.begin();
+  		if (rand < 0 || rand >= get_total_size()) {
+  			cout << "Problematic random number!!! " << rand << "\n";
+  			rand = unif_i(generator);
+  		}
+  	}
+
+  	state_t state = index_to_state(id_to_index(rand));
+  	for (int i = 0; i < get_dim(); ++i) {
+  		train_x(i+1,i_sample) = state[i] - motion_offset[i];
+  	}
+
+  	train_y(0,i_sample) = sensor_update (state);
   }
+
+  // if (first_training) {
+  // 	first_training = false;
+  // } else {
+  // 	Matrix pred = net.predict(train_x);
+  // 	for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
+  // 	  train_y(0,i_sample) *= pred(0,i_sample);
+  // 	}
+  // }
 
   // cout << "train_x\n" << train_x ;
   // cout << "\n\n\ntrain_y\n" << train_y ;
 
   // Normalize train_y
-  normalize (train_y);
+  // normalize (train_y);
 
 
   // Fit the model with a batch size of 100, running 10 epochs with random seed 123
@@ -158,8 +158,10 @@ void NeuralNetwork::store_cdf () {
   }
 
   io_store_pdf (cdf);
+  compute_mean_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
+  io_store_error (cdf);
 }
 
 void NeuralNetwork::destroy () {

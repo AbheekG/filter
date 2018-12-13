@@ -5,6 +5,8 @@ string Filter::test_path;
 std::ifstream Filter::meta_fid;
 std::ifstream Filter::motion_fid;
 std::ifstream Filter::sensor_fid;
+std::ofstream Filter::state_error_fid;
+std::ofstream Filter::cdf_error_fid;
 vector<state_t> Filter::domain_points;
 
 int Filter::n_epoch;
@@ -18,6 +20,9 @@ vector<int> Filter::dim_size;
 vector<state_t> Filter::dim_bounds;
 state_t Filter::dim_density;
 
+state_t* Filter::base_mean_state = NULL;
+vector<double>* Filter::base_cdf = NULL;
+
 // Init.
 void Filter::filter_init  (string _test_path = "data/test1/") {
 	
@@ -29,6 +34,12 @@ void Filter::filter_init  (string _test_path = "data/test1/") {
 	sensor_pdf.resize (total_size);
 
 	epoch = 0;
+}
+
+
+void Filter::make_base () {
+	base_mean_state = &mean_state;
+	base_cdf = &cdf;
 }
 
 void Filter::filter_destroy () {
@@ -77,6 +88,9 @@ void Filter::new_iteration () {
 	for (auto &p : sensor_pdf) {
 		sensor_fid >> p;
 	}
+
+	state_error_fid << endl << epoch << " & ";
+	cdf_error_fid << endl << epoch << " & ";
 }
 
 /*

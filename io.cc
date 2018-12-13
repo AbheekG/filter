@@ -1,4 +1,5 @@
 #include "filter.hh"
+#include <cmath>
 
 /*
 Input/Output.
@@ -58,11 +59,21 @@ void Filter::io_init () {
 	path = test_path + "sensor.csv";
 	sensor_fid.open (path.c_str());
 	if (!sensor_fid) cout << "Couldn't open the file.\n";
+
+	// Storing Error.
+	path = test_path + "error-state.csv";
+	state_error_fid.open (path.c_str());
+	if (!state_error_fid) cout << "Couldn't open the file.\n";
+	path = test_path + "error-cdf.csv";
+	cdf_error_fid.open (path.c_str());
+	if (!cdf_error_fid) cout << "Couldn't open the file.\n";
 }
 
 void Filter::io_destroy () {
 	motion_fid.close ();
 	sensor_fid.close ();
+	state_error_fid.close ();
+	cdf_error_fid.close ();
 }
 
 void Filter::io_store_cdf (vector<double> &cdf) {
@@ -77,4 +88,21 @@ void Filter::io_store_pdf (vector<double> &pdf) {
 		pdf_fid << pdf[i];
 		if (i < pdf.size() - 1) pdf_fid << " "; else pdf_fid << endl;
 	}
+}
+
+void Filter::io_store_error (const vector<double> &cdf) {
+	double mean_error = 0, cdf_error = 0;
+
+	for (int i = 0; i < n_dim; ++i) {
+		mean_error += (( (*base_mean_state)[i] - mean_state[i] )
+			*( (*base_mean_state)[i] - mean_state[i] ));
+	}
+
+	for (int i = 0; i < cdf.size(); ++i) {
+		cdf_error += (( (*base_cdf)[i] - cdf[i] )
+			*( (*base_cdf)[i] - cdf[i] ));
+	}
+
+	state_error_fid << std::fixed << std::setprecision(4) << sqrt(mean_error) << " & ";
+	cdf_error_fid << std::fixed << std::setprecision(4) << sqrt(cdf_error) << " & ";
 }
