@@ -24,13 +24,15 @@ class NeuralNetwork : public Filter {
 	// Neural net
 	MiniDNN::Network net;
 	vector<MiniDNN::Layer*> layers;
-	MiniDNN::SGD opt;
-	MiniDNN::Callback callback;
+	MiniDNN::RMSProp opt;
+	MiniDNN::VerboseCallback callback;
 
 	// noNAO
 	Matrix test_x;
   	Matrix test_y;
 
+  	// Normalize output
+	void normalize (Matrix &train_y);
 
 public:
 	void init (int, int, vector<int>, double);

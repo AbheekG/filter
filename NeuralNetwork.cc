@@ -41,7 +41,6 @@ void NeuralNetwork::init ( int _nn_iter, int _nn_samples,
   opt.m_lrate = l_rate;
 
   // Loss print function.
-  callback.m_nepoch = 100;
   net.set_callback(callback);
 
   // Initialize parameters with N(0, 0.01^2) using random seed 123
@@ -56,18 +55,6 @@ void NeuralNetwork::init ( int _nn_iter, int _nn_samples,
   cdf_fid.open(path);
   path = get_test_path() + "pdf-" + name;
   pdf_fid.open(path);
-
-  // NoNAO
-  test_x.resize(get_dim()+1, get_total_size());
-  test_y.resize(1, get_total_size());
-
-  for (int i; i < get_total_size(); ++i) {
-    state_t state = index_to_state(id_to_index(i));
-    test_x(0,i) = 1;
-    for (int j = 0; j < get_dim(); j++) {
-      test_x(j+1,i) = state[j];
-    }
-  }
 }
 
 void NeuralNetwork::process () {
@@ -82,59 +69,67 @@ void NeuralNetwork::process () {
   state_t state = state_t(get_dim(),0);
   state = motion_update(state);
   for (int i = 0; i < get_dim(); ++i) {
-  	motion_offset[i] += state[i];
-  	cout << motion_offset[i];
+    motion_offset[i] += state[i];
   }
 
-  for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-  	int rand;
+  // TEMP Use all data points
+  nn_samples = get_total_size();
+  train_x.resize(get_dim()+1, nn_samples);
+  train_y.resize(1, nn_samples);
 
-  	// Purely random // TODO NOTE.  only using this
-  	if (i_sample < int(2*nn_samples)) {
-  		rand = unif_i(generator);
-  	}
-  	// Using previous CDF
-  	else {
-  		rand = std::lower_bound(cdf.begin(), cdf.end(),
-  			unif_d(generator)) - cdf.begin();
-  		if (rand < 0 || rand >= get_total_size()) {
-  			cout << "Problematic random number!!! " << rand << "\n";
-  			rand = unif_i(generator);
-  		}
-  	}
+  for (int i = 0; i < nn_samples; ++i) {
+    state_t state = index_to_state(id_to_index(i));
+    train_x(0,i) = 1;
+    for (int j = 0; j < get_dim(); j++) {
+      train_x(j+1,i) = state[j] - motion_offset[j];
+    }
 
-  	state_t state = index_to_state(id_to_index(rand));
-  	for (int i = 0; i < get_dim(); ++i) {
-  		train_x(i+1,i_sample) = state[i] - motion_offset[i];
-  	}
-
-  	train_y(0,i_sample) = sensor_update (state) * get_total_size();
+    train_y(0,i) = sensor_update (state);
   }
+
+  // for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
+  // 	int rand;
+
+  // 	// Purely random // TODO NOTE.  only using this
+  // 	if (i_sample < int(2*nn_samples)) {
+  // 		rand = unif_i(generator);
+  // 	}
+  // 	// Using previous CDF
+  // 	else {
+  // 		rand = std::lower_bound(cdf.begin(), cdf.end(),
+  // 			unif_d(generator)) - cdf.begin();
+  // 		if (rand < 0 || rand >= get_total_size()) {
+  // 			cout << "Problematic random number!!! " << rand << "\n";
+  // 			rand = unif_i(generator);
+  // 		}
+  // 	}
+
+  // 	state_t state = index_to_state(id_to_index(rand));
+  // 	for (int i = 0; i < get_dim(); ++i) {
+  // 		train_x(i+1,i_sample) = state[i] - motion_offset[i];
+  // 	}
+
+  // 	train_y(0,i_sample) = sensor_update (state);
+  // }
 
   if (first_training) {
   	first_training = false;
   } else {
   	Matrix pred = net.predict(train_x);
   	for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-	  train_y(0,i_sample) *= pred(0,i_sample);
-	}
+  	  train_y(0,i_sample) *= pred(0,i_sample);
+  	}
   }
 
-  cout << "train_x\n" << train_x ;
-  cout << "train_y\n" << train_y ;
+  // cout << "train_x\n" << train_x ;
+  // cout << "\n\n\ntrain_y\n" << train_y ;
 
   // Normalize train_y
-  // double sum_y = 0;
-  // for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-  // 	sum_y += train_y(0,i_sample);
-  // }
-  // for (int i_sample = 0; i_sample < nn_samples; ++i_sample) {
-  // 	train_y(0,i_sample) *= (nn_samples/sum_y);
-  // }
+  normalize (train_y);
 
 
   // Fit the model with a batch size of 100, running 10 epochs with random seed 123
-  net.fit(opt, train_x, train_y, nn_samples, nn_iter, 123);
+  net.fit(opt, train_x, train_y, 32, nn_iter, 123);
 
   clock_stop ();  
 }
@@ -144,7 +139,18 @@ void NeuralNetwork::store_cdf () {
   std::fill(cdf.begin(), cdf.end(), 0);
 
   // Obtain prediction -- each column is an observation
+  // NoNAO
+  test_x.resize(get_dim()+1, get_total_size());
+
+  for (int i = 0; i < get_total_size(); ++i) {
+    state_t state = index_to_state(id_to_index(i));
+    test_x(0,i) = 1;
+    for (int j = 0; j < get_dim(); j++) {
+      test_x(j+1,i) = state[j] - motion_offset[j];
+    }
+  }
   test_y = net.predict(test_x);
+  normalize (test_y);
 
   // Construct approximate pdf. here pdf is called cdf.
   for (int i = 0; i < get_total_size(); ++i) {
@@ -159,4 +165,15 @@ void NeuralNetwork::store_cdf () {
 void NeuralNetwork::destroy () {
   pdf_fid.close();
   cdf_fid.close();
+}
+
+void NeuralNetwork::normalize (NeuralNetwork::Matrix &y) {
+
+  double sum_y = 0;
+  for (int i = 0; i < y.cols(); ++i) {
+    sum_y += y(0,i);
+  }
+  for (int i = 0; i < y.cols(); ++i) {
+    y(0,i) /= sum_y;
+  }
 }
