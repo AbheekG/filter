@@ -8,7 +8,7 @@
 
 int main () {
 	// Parameters.
-	string TEST = "data/test1/";
+	string TEST = "data/test3/";
 
 	Filter::filter_init (TEST);
 	// Filter::filter_print ();
@@ -27,7 +27,7 @@ int main () {
 	pf.init(N_PARTICLES);
 
 	// Fixed Grid Filter
-	int grid_approx = 100;	// storing 1/8 times data each dimension.
+	int grid_approx = 10;	// storing 1/10 times data each dimension.
 	cout << "Fixed-grid filter.\n\tUsing grid approx ratio = " << grid_approx << endl;
 	GridFilter gf;
 	gf.init(grid_approx);
@@ -51,9 +51,9 @@ int main () {
 
 	// Neural Network
 	int nn_iter = 1;	// # iterations in each step.
-	int nn_samples = 5000;	// # samples to use.
-	vector<int> layer_sizes = {10, 10};		// Layers.
-	double l_rate = 0.01;	// Learning rate.
+	int nn_samples = 100;	// # samples to use.
+	vector<int> layer_sizes = {10,10};		// Layers.
+	double l_rate = 0.1;	// Learning rate.
 	cout << "Neural network with:\n";
 	cout << "\t# iterations in each step = " << nn_iter << endl;
 	cout << "\t# samples to use in each step = " << nn_samples << endl;

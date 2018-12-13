@@ -64,3 +64,19 @@ void Filter::compute_mean_state (const vector<double> &pdf) {
 		}
 	}
 }
+
+
+void Filter::compute_mode_state (const vector<double> &pdf) {
+
+	double wt = 0;
+	state_t state(n_dim, 0);
+	mode_state.resize(n_dim, 0);
+
+	for (int i = 0; i < pdf.size(); ++i) {
+		state = index_to_state( id_to_index (i) );
+		if (wt < pdf[i]) {
+			wt = pdf[i];
+			mode_state = state;
+		}
+	}
+}

@@ -32,8 +32,9 @@ private:
 	static std::ifstream meta_fid;
 	static std::ifstream motion_fid;
 	static std::ifstream sensor_fid;
-	static std::ofstream state_error_fid;
-	static std::ofstream cdf_error_fid;
+	static std::ofstream error_state_mean_fid;
+	static std::ofstream error_state_mode_fid;
+	static std::ofstream error_cdf_fid;
 	static void io_init ();
 	static void io_destroy ();
 
@@ -54,6 +55,7 @@ private:
 
 	// Error related
 	static state_t* base_mean_state;
+	static state_t* base_mode_state;
 	static vector<double>* base_cdf;
 
 	// Clock related.
@@ -80,11 +82,14 @@ protected:
 	std::ofstream pdf_fid;
 	vector<double> cdf;
 	state_t mean_state;
+	state_t mode_state;
 
+	void io_diffuse_pdf (vector<double> &);
 	void io_store_cdf (vector<double> &);
 	void io_store_pdf (vector<double> &);
 	void pdf_to_cdf (vector<double> &);
   	void compute_mean_state (const vector<double> &);
+  	void compute_mode_state (const vector<double> &);
   	void io_store_error (const vector<double> &);
 
 	// Fast inline functions.

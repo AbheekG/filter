@@ -61,19 +61,23 @@ void Filter::io_init () {
 	if (!sensor_fid) cout << "Couldn't open the file.\n";
 
 	// Storing Error.
-	path = test_path + "error-state.csv";
-	state_error_fid.open (path.c_str());
-	if (!state_error_fid) cout << "Couldn't open the file.\n";
+	path = test_path + "error-state-mean.csv";
+	error_state_mean_fid.open (path.c_str());
+	if (!error_state_mean_fid) cout << "Couldn't open the file.\n";
+	path = test_path + "error-state-mode.csv";
+	error_state_mode_fid.open (path.c_str());
+	if (!error_state_mode_fid) cout << "Couldn't open the file.\n";
 	path = test_path + "error-cdf.csv";
-	cdf_error_fid.open (path.c_str());
-	if (!cdf_error_fid) cout << "Couldn't open the file.\n";
+	error_cdf_fid.open (path.c_str());
+	if (!error_cdf_fid) cout << "Couldn't open the file.\n";
 }
 
 void Filter::io_destroy () {
 	motion_fid.close ();
 	sensor_fid.close ();
-	state_error_fid.close ();
-	cdf_error_fid.close ();
+	error_state_mean_fid.close ();
+	error_state_mode_fid.close ();
+	error_cdf_fid.close ();
 }
 
 void Filter::io_store_cdf (vector<double> &cdf) {
@@ -91,11 +95,16 @@ void Filter::io_store_pdf (vector<double> &pdf) {
 }
 
 void Filter::io_store_error (const vector<double> &cdf) {
-	double mean_error = 0, cdf_error = 0;
+	double mean_error = 0, mode_error = 0, cdf_error = 0;
 
 	for (int i = 0; i < n_dim; ++i) {
 		mean_error += (( (*base_mean_state)[i] - mean_state[i] )
 			*( (*base_mean_state)[i] - mean_state[i] ));
+	}
+
+	for (int i = 0; i < n_dim; ++i) {
+		mode_error += (( (*base_mode_state)[i] - mode_state[i] )
+			*( (*base_mode_state)[i] - mode_state[i] ));
 	}
 
 	for (int i = 0; i < cdf.size(); ++i) {
@@ -103,6 +112,108 @@ void Filter::io_store_error (const vector<double> &cdf) {
 			*( (*base_cdf)[i] - cdf[i] ));
 	}
 
-	state_error_fid << std::fixed << std::setprecision(4) << sqrt(mean_error) << " & ";
-	cdf_error_fid << std::fixed << std::setprecision(4) << sqrt(cdf_error) << " & ";
+	error_state_mean_fid << std::fixed << std::setprecision(4) << sqrt(mean_error) << " & ";
+	error_state_mode_fid << std::fixed << std::setprecision(4) << sqrt(mode_error) << " & ";
+	error_cdf_fid << std::fixed << std::setprecision(4) << sqrt(cdf_error) << " & ";
+}
+
+
+void Filter::io_diffuse_pdf (vector<double> &pdf) {
+
+	// Summing up to find PDF.
+	/*
+	TODO.
+	Currently supports 1-D, 2-D and 3-D individually.
+	Add support for arbritary dimension.
+	*/
+	vector<int> index(n_dim);
+	vector<int> shifts = {-3, -2, -1, 0, 1, 2, 3};
+
+	assert (n_dim == 1 || n_dim == 2 || n_dim == 3);
+	int iii = 50;
+	while (iii > 0) {
+		iii--;
+		auto temp_pdf = pdf;
+		if (n_dim == 1) {
+			int i = 0;
+			for (index[i] = 0; index[i] < dim_size[i]; ++index[i]) {
+				
+				double count = 0, wt = 0;
+				for (auto shift : shifts) {
+					index[i] += shift;
+					bool valid_index = true;
+					for (int i_dim = 0; i_dim < n_dim; ++i_dim) {
+						if (index[i_dim] < 0) valid_index = false;
+						if (index[i_dim] >= dim_size[i_dim]) valid_index = false;
+					}
+					if (valid_index) {
+						wt += temp_pdf[index_to_id(index)];
+						count += 1.0;
+					}
+					index[i] -= shift;
+				}
+				pdf[index_to_id(index)] = wt/count;
+
+			}
+		}
+		else if (n_dim == 2) {
+			int i = 0, j = 1;
+			for (index[i] = 0; index[i] < dim_size[i]; ++index[i]) {
+				for (index[j] = 0; index[j] < dim_size[j]; ++index[j]) {
+					
+					double count = 0, wt = 0;
+					for (auto i_shift : shifts) {
+					for (auto j_shift : shifts) {
+						index[i] += i_shift;
+						index[j] += j_shift;
+						bool valid_index = true;
+						for (int i_dim = 0; i_dim < n_dim; ++i_dim) {
+							if (index[i_dim] < 0) valid_index = false;
+							if (index[i_dim] >= dim_size[i_dim]) valid_index = false;
+						}
+						if (valid_index) {
+							wt += temp_pdf[index_to_id(index)];
+							count += 1.0;
+						}
+						index[i] -= i_shift;
+						index[j] -= j_shift;
+					}}
+					pdf[index_to_id(index)] = wt/count;
+
+				}
+			}
+		}
+		else if (n_dim == 3) {
+			int i = 0, j = 1, k = 2;
+			for (index[i] = 0; index[i] < dim_size[i]; ++index[i]) {
+				for (index[j] = 0; index[j] < dim_size[j]; ++index[j]) {
+					for (index[k] = 0; index[k] < dim_size[k]; ++index[k]) {
+						
+						double count = 0, wt = 0;
+						for (auto i_shift : shifts) {
+						for (auto j_shift : shifts) {
+						for (auto k_shift : shifts) {
+							index[i] += i_shift;
+							index[j] += j_shift;
+							index[k] += k_shift;
+							bool valid_index = true;
+							for (int i_dim = 0; i_dim < n_dim; ++i_dim) {
+								if (index[i_dim] < 0) valid_index = false;
+								if (index[i_dim] >= dim_size[i_dim]) valid_index = false;
+							}
+							if (valid_index) {
+								wt += temp_pdf[index_to_id(index)];
+								count += 1.0;
+							}
+							index[i] -= i_shift;
+							index[j] -= j_shift;
+							index[k] -= k_shift;
+						}}}
+						pdf[index_to_id(index)] = wt/count;
+
+					}
+				}
+			}
+		}
+	}
 }

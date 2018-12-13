@@ -8,7 +8,7 @@ function plot_data2(file)
 	end
 		
 	file_names = {};
-	file_names{1} = "pdf-neural-network-5000.csv";
+	file_names{1} = "pdf-neural-network-500.csv";
 
 	cdfs = {};
 	for i = 1:length(file_names)

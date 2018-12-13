@@ -21,6 +21,7 @@ void PolyFilter::init ( int _n_samples, int _deg) {
 
 
   cdf.resize(get_total_size(), 1./get_total_size());
+  for (int i = 1; i < get_total_size(); ++i) cdf[i] += cdf[i-1];
    // CDF I/O
   name = "poly-filter-" + std::to_string (n_samples) + ".csv";
   string path = get_test_path() + "cdf-" + name;
@@ -46,9 +47,9 @@ void PolyFilter::process () {
 
 
   // TEMP Use all data points
-  n_samples = get_total_size();
-  train_x.resize(new_dim, n_samples);
-  train_y.resize(1, n_samples);
+  // n_samples = get_total_size();
+  // train_x.resize(new_dim, n_samples);
+  // train_y.resize(1, n_samples);
 
   // for (int i_sample = 0; i_sample < n_samples; ++i_sample) {
   //   int rand = i_sample;
@@ -71,7 +72,7 @@ void PolyFilter::process () {
   	int rand;
 
   	// Purely random // TODO NOTE.  only using this
-  	if (i_sample < int(0*n_samples)) {
+  	if (i_sample < int(0.5*n_samples)) {
   		rand = unif_i(generator);
   	}
   	// Using previous CDF
@@ -148,8 +149,10 @@ void PolyFilter::store_cdf () {
   	cdf[i] = test_y(0,i);
   }
 
+  io_diffuse_pdf (cdf);
   io_store_pdf (cdf);
   compute_mean_state (cdf);
+  compute_mode_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
   io_store_error (cdf);

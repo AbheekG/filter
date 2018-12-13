@@ -76,8 +76,10 @@ void ParticleFilter::store_cdf () {
     cdf[index_to_id(state_to_index (p))] += 1.0/n_particles;
   }
 
+  io_diffuse_pdf (cdf);
   io_store_pdf (cdf);
   compute_mean_state (cdf);
+  compute_mode_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
   io_store_error (cdf);

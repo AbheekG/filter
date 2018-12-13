@@ -66,19 +66,6 @@ function gen
 	0, 2;
 	];
 
-	Motion = [
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	0, 0;
-	];
-
 	% Generating data
 	for i = 1:n_epoch
 		for j = 1:n_dim

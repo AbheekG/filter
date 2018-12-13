@@ -115,8 +115,10 @@ void GridFilter::store_cdf () {
       grid_id_to_index (i))))] += grid_pdf[i];
   }
 
+  io_diffuse_pdf (cdf);
   io_store_pdf (cdf);
   compute_mean_state (cdf);
+  compute_mode_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
   io_store_error (cdf);

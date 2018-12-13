@@ -44,7 +44,7 @@ void NeuralNetwork::init ( int _nn_iter, int _nn_samples,
   // net.set_callback(callback);
 
   // Initialize parameters with N(0, 0.01^2) using random seed 123
-  net.init(0, 0.01, 123);
+  net.init(0, 0.1, 123);
 
 
   cdf.resize(get_total_size(), 1./get_total_size());
@@ -73,9 +73,9 @@ void NeuralNetwork::process () {
   }
 
   // TEMP Use all data points
-  nn_samples = get_total_size();
-  train_x.resize(get_dim()+1, nn_samples);
-  train_y.resize(1, nn_samples);
+  // nn_samples = get_total_size();
+  // train_x.resize(get_dim()+1, nn_samples);
+  // train_y.resize(1, nn_samples);
 
   // for (int i = 0; i < nn_samples; ++i) {
   //   state_t state = index_to_state(id_to_index(i));
@@ -91,7 +91,7 @@ void NeuralNetwork::process () {
   	int rand;
 
   	// Purely random // TODO NOTE.  only using this
-  	if (i_sample < int(0*nn_samples)) {
+  	if (i_sample < int(0.5*nn_samples)) {
   		rand = unif_i(generator);
   	}
   	// Using previous CDF
@@ -157,8 +157,10 @@ void NeuralNetwork::store_cdf () {
   	cdf[i] = test_y(0,i);
   }
 
+  io_diffuse_pdf (cdf);
   io_store_pdf (cdf);
   compute_mean_state (cdf);
+  compute_mode_state (cdf);
   pdf_to_cdf (cdf);
   io_store_cdf (cdf);
   io_store_error (cdf);
