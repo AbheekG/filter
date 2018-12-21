@@ -1,6 +1,8 @@
 Comparing Bayesian Filtering Techniques 
 ======================
 
+The code for Nao robot is available at: https://github.com/AbheekG/nao
+
 ##### Compile & Run
 The source code is inside "src" directory. To compile, go inside "src" and make.
 ~~~
